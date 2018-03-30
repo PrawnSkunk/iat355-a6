@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Max Proske :: IAT 355 A5</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- d3js -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- topojson -->
+    <script src="https://unpkg.com/topojson@3"></script>
+</head>
+
+<body>
+
+<!-- Banner -->
+<div id="banner">
+    <div id="moving-image">
+        <div class="row">
+            <div id="title">A5: Free Basics Timeline</div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Menu -->
+<div class="navigation">
+    <div class="row">
+        <ul class="menu">
+        </ul>
+    </div>
+</div>
+
+<!-- Content-->
+<div class="content">
+    <div class="row">
+
+        <ul class="legend">
+            <li><span class="online"></span> Service Online</li>
+            <li><span class="norollout"></span> Not Available</li>
+        </ul>
+
+        <!-- Map Container -->
+        <div class="block">
+            <div id="map"></div>
+        </div>
+
+        <!-- Slider -->
+        <div class="slider">
+            <label for="nVel">
+                <span id="goal-label">Wed Dec 31 2014 16:00:00 GMT-0800 (Pacific Standard Time)</span>
+                <span id="goal-value">1420070400</span>
+                <input id="goal" type="range" min="1388600000" max="1521671613" value="1420070400" step="1">
+            </label>
+        </div>
+
+        <br/><br/>
+
+        <!-- About -->
+        <div class="block">
+            <div class="references">
+                <article>
+                    <h2>About</h2>
+                    <p>Of the world’s 7 billion people, 4.3 billion remain without access to the internet. In 2013, Facebook launched Free Basics, a global partnership with the goal of making internet access available, without any financial cost to the user.</p>
+                    <p>We want to <strong>track Facebook’s rollout of free mobile broadband internet</strong> across Africa, and other developing nations. Our objective is to develop a timeline of where Free Basics is either online, prohibited, terminated, or planned for future rollout. This is significant, because the information is not publically available anywhere, and such a dataset does not exist yet.</p>
+                </article>
+            </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="block">
+            <article>
+                <h2>Number of Countries Per Provider</h2>
+                <br/>
+                <div id="chart"></div>
+                <p>This visualization does not yet work with the interactive slider. In my next visualization, I want to visualize how Digicel, Airtel, and Tigo affect mobile subscribers per 100 inhabitants over time.</p>
+            </article>
+        </div>
+
+        <!-- Resources -->
+        <div class="block">
+            <div class="resources">
+                <article>
+                    <h2>Resources</h2>
+                    <p><a href="https://github.com/d3/d3" target="_blank">D3.js</a></p>
+                    <p><a href="https://github.com/topojson/topojson" target="_blank">TopoJSON</a></p>
+                    <p><a href="data/countries.json" target="_blank">TopoJSON countries dataset</a></p>
+                    <p><a href="data/freebasics.csv" target="_blank">Our self-collected dataset</a></p>
+                    <p><a href="https://www.youtube.com/watch?v=OKw0KCH9rZA" target="_blank">Mastering D3.js Tutorials</a></p>
+                    <p><a href="https://info.internet.org/" target="_blank">Free Basics by Facebook</a></p>
+                    <p><a href="https://github.com/PrawnSkunk/iat355-a5/" target="_blank">This GitHub repo</a></p>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom -->
+<script src="js/visualization.js"></script>
+
+<!-- Footer -->
+<div class="footer">Max Proske (IAT 355, Spring 2018)</div>
+
+</body>
+</html>

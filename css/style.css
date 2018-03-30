@@ -1,0 +1,445 @@
+/* Imports
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+
+/* Colour Scheme
+   ========================================================================== */
+
+:root {
+    --darkest: #111;
+    --darker: #333;
+    --dark: #444;
+    --light: #AAA;
+    --lighter: #CCC;
+    --lightest: #EEE;
+    --primary-dark: #18213F;
+    --primary-light: #555;
+    --primary-accent: #3E353A;
+    --open: #37b24d;
+    --closed: #f03e3e;
+}
+
+/* Media Queries
+   ========================================================================== */
+
+@media(max-width: 35em) {
+    .slot-panel {
+        width: auto !important;
+    }
+    .menu, #banner, h1 {
+        text-align: center;
+    }
+}
+@media(max-width: 450px) {
+    #title {
+        font-size: 10vw !important;
+    }
+    #subtitle {
+        font-size: 8.5vw !important;
+    }
+}
+
+/* HTML Elements
+   ========================================================================== */
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--darker);
+    color: var(--lighter);
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 1.5em;
+    margin: 0 0 0.5em 0;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid var(--lighter);
+    margin: 1em 0;
+    padding: 0;
+}
+
+p {
+    line-height: 1.75em;
+}
+
+p a, li a {
+    font-weight: bold;
+    color: var(--primary-light);
+    text-decoration: none;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
+}
+
+p a:visited, li a:visited {
+    color: var(--primary-light);
+}
+
+p a:hover, li a:hover {
+    color: var(--primary-dark);
+}
+
+img {
+    max-width: 100%;
+}
+
+/* Banner
+   ========================================================================== */
+
+#banner {
+    padding: 0;
+    margin: 0;
+    background-color: var(--primary-light);
+}
+
+#banner #moving-image {
+    padding: 4em 0 1em 0;
+    background-image: none;
+    -webkit-animation:snow 20s linear infinite;
+    -moz-animation:snow 20s linear infinite;
+    -ms-animation:snow 20s linear infinite;
+    -o-animation:snow 20s linear infinite;
+    animation:snow 20s linear infinite;
+}
+
+@keyframes snow {
+    0% 		{ background-position: 0px 4000px }
+    100% 	{ background-position: 2000px 0px }
+}
+@-webkit-keyframes snow {
+    0% 		{ background-position: 0px 0px }
+    100% 	{ background-position: 2000px 4000px }
+}
+
+#title {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-weight: 600;
+    font-size: 3rem;
+    text-align: center;
+}
+
+#subtitle {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-size: 2.57rem;
+}
+
+/* Menu
+   ========================================================================== */
+
+.menu {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.menu li {
+    font-size: 1.15em;
+    display: inline;
+}
+
+.menu li + li:before{
+    content: "| ";
+    color: var(--dark);
+    padding: 0 0.75em;
+}
+
+.menu li a {
+    color: var(--light);
+    text-decoration: none;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+.menu li.active a {
+    color: white;
+}
+
+.menu li a:hover {
+    color: white;
+}
+
+/* Content Grid
+   ========================================================================== */
+
+.content {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    color: var(--darkest);
+    background-color: var(--lightest);
+}
+
+.row {
+    padding: 1em;
+    max-width: 45em;
+    margin: 0 auto;
+}
+
+div {
+    clear: left; /* clearfix hack */
+}
+
+.block {
+    padding-bottom: 1.5em;
+    overflow: auto; /* clearfix hack */
+}
+
+/* clearfix hack */
+.block::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Footer
+   ========================================================================== */
+
+.footer {
+    padding: 1em;
+    text-align: center;
+}
+
+/* Legend
+   ========================================================================== */
+
+.legend { list-style: none; }
+.legend li { float: left; margin-right: 10px; }
+.legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
+.legend .terminated { background-color: red; }
+.legend .online { background-color: #37b24d; }
+.legend .planned { background-color: blue; }
+.legend .prohibited { background-color: orange; }
+.legend .norollout { background-color: #ccc; }
+.legend span {
+    padding-right: 0.75em;
+    margin-right: 0.5em;
+}
+
+/* Slider
+   ========================================================================== */
+
+input[type=range] {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 100%; /* Specific width is required for Firefox. */
+    background: transparent; /* Otherwise white in Chrome */
+  }
+  
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+  }
+  
+  input[type=range]:focus {
+    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+  }
+  
+  input[type=range]::-ms-track {
+    width: 100%;
+    cursor: pointer;
+  
+    /* Hides the slider so custom styles can be added */
+    background: transparent; 
+    border-color: transparent;
+    color: transparent;
+  }
+
+  /* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+  }
+  
+  /* All the same stuff for Firefox */
+  input[type=range]::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+  }
+  
+  /* All the same stuff for IE */
+  input[type=range]::-ms-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: var(--darker);
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+  
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: var(--darker);
+  }
+  
+  input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: var(--darker);
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+  
+  input[type=range]::-ms-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    border-width: 16px 0;
+    color: transparent;
+  }
+  input[type=range]::-ms-fill-lower {
+    background: var(--darker);
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  }
+  input[type=range]:focus::-ms-fill-lower {
+    background: var(--darker);
+  }
+  input[type=range]::-ms-fill-upper {
+    background: var(--darker);
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  }
+  input[type=range]:focus::-ms-fill-upper {
+    background: var(--darker);
+  }
+
+
+/* Map Visualization
+========================================================================== */
+
+.country {
+    transition: fill .4s ease;
+    fill: #ccc;
+    stroke: #333;
+    stroke-width: 0.5;
+}
+
+.country.selected {
+    transition: fill .1s ease;
+    fill: plum !important;
+}
+.country.selected.hovering {
+    transition: fill .1s ease;
+    fill: plum !important;
+}
+
+.country.hovering {
+    transition: fill .4s ease;
+    fill: #ddd;
+}
+
+.country.capital {
+    transition: fill .4s ease;
+    fill: #333;
+    opacity: 0.5;
+}
+
+.country.visible {
+    transition: fill .4s ease;
+    fill: #37b24d;
+}
+
+.country.visible.hovering {
+    transition: fill .4s ease;
+    fill: #73c982;
+}
+
+/* Map Labels
+========================================================================== */
+
+.country-label {
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    transition: opacity .4s ease;
+    transform: translate(9999px); /* Prevent text from covering other countries */
+    opacity: 0;
+    font-size: 0.75em;
+    font-weight: bolder;
+    background-color: #000;
+}
+.country-label.hovering, .country-label.selected {
+    transition: opacity .4s ease;
+    transform: translate(0);
+    opacity: 1;
+}
+
+/* Slider Customization
+========================================================================== */
+
+#goal-label {
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    position: relative;
+    top: -1em;
+}
+
+#goal-value {
+    display: none;
+}
+
+.slider {
+    font-family: monospace;
+    font-size: 1.5em;
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+
+.slider label input {
+    width: 100%;
+}
+
+/* Chart
+========================================================================== */
+
+rect.bar {
+    fill: var(--darker);
+}
+.x-axis text {
+    text-shadow: 1px 1px var(--lighter);
+}
+.y-axis text, .x-axis text {
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
