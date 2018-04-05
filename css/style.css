@@ -215,10 +215,10 @@ div {
 .legend { list-style: none; }
 .legend li { float: left; margin-right: 10px; }
 .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
-.legend .terminated { background-color: red; }
+.legend .terminated { background-color: black; }
 .legend .online { background-color: #37b24d; }
 .legend .planned { background-color: blue; }
-.legend .prohibited { background-color: orange; }
+.legend .prohibited { background-color: red; }
 .legend .norollout { background-color: #ccc; }
 .legend span {
     padding-right: 0.75em;
