@@ -72,6 +72,12 @@
                 if (d.status == "Added") {
                     return "country " + (d.timestamp < goal ? "visible" : "hidden");
                 }
+                if (d.status == "Prohibited") {
+                    return "country " + (d.timestamp < goal ? "prohibited" : "hidden");
+                }
+                if (d.status == "Terminated") {
+                    return "country " + (d.timestamp < goal ? "terminated" : "hidden");
+                }
                 return "country";
             })
             .attr("d", path)
@@ -95,6 +101,16 @@
                             var date = new Date(goal * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
                             return d.properties.name + " (" + d.provider + ", " + dateText + ")";
+                        }
+                        if (d.status == "Prohibited") {
+                            var date = new Date(goal * 1000);
+                            var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
+                            return d.properties.name + " (" + d.provider + ", " + dateText +" Prohibited"+ ")";
+                        }
+                        if (d.status == "Terminated") {
+                            var date = new Date(goal * 1000);
+                            var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
+                            return d.properties.name + " (" + d.provider + ", " + dateText +" Terminated"+ ")";
                         }
                         return d.properties.name + " (No rollout)";
                     });
@@ -163,6 +179,22 @@
                 if (d.status == "Added") {
                     this.classList.add(d.timestamp < goal ? "visible" : "hidden");
                     this.classList.remove(d.timestamp < goal ? "hidden" : "visible");
+                    // Update label
+                    var d = new Date(goal * 1000);
+                    var text =  d.getFullYear() + '/' +  ((d.getMonth()+1 < 10) ? ("0")+(d.getMonth()+1) : d.getMonth()+1) + '/' + ((d.getDate() < 10) ? ("0")+(d.getDate()) : d.getDate());
+                    d3.select('#goal-label').text(text);
+                }
+                if (d.status == "Prohibited") {
+                    this.classList.add(d.timestamp < goal ? "prohibited" : "hidden");
+                    this.classList.remove(d.timestamp < goal ? "hidden" : "prohibited");
+                    // Update label
+                    var d = new Date(goal * 1000);
+                    var text =  d.getFullYear() + '/' +  ((d.getMonth()+1 < 10) ? ("0")+(d.getMonth()+1) : d.getMonth()+1) + '/' + ((d.getDate() < 10) ? ("0")+(d.getDate()) : d.getDate());
+                    d3.select('#goal-label').text(text);
+                }
+                if (d.status == "Terminated") {
+                    this.classList.add(d.timestamp < goal ? "terminated" : "hidden");
+                    this.classList.remove(d.timestamp < goal ? "hidden" : "terminated");
                     // Update label
                     var d = new Date(goal * 1000);
                     var text =  d.getFullYear() + '/' +  ((d.getMonth()+1 < 10) ? ("0")+(d.getMonth()+1) : d.getMonth()+1) + '/' + ((d.getDate() < 10) ? ("0")+(d.getDate()) : d.getDate());

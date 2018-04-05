@@ -375,6 +375,16 @@ input[type=range]::-webkit-slider-thumb {
     fill: #37b24d;
 }
 
+.country.prohibited{
+    transition: fill .4s ease;
+    fill: #b23737;
+}
+
+.country.terminated{
+    transition: fill .4s ease;
+    fill: #000000;
+}
+
 .country.visible.hovering {
     transition: fill .4s ease;
     fill: #73c982;
