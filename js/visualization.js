@@ -1,7 +1,7 @@
 // Self invoking function
 (function() {
 
-    // Set offset for antarctica
+    // Trim Antarctica from map
     var offset = 170;
 
     // Set margins
@@ -10,7 +10,7 @@
     width = 720 - margin.left - margin.right
     goal = 1420070400;
 
-    // Update label
+    // Datetime (2014/01/01 by efault)
     var d = new Date(goal * 1000);
     var text =  d.getFullYear() + '/' +  (d.getMonth()+1 < 10 ? "0"+d.getMonth()+1 : d.getMonth()+1) + '/' + d.getDate();
     d3.select('#goal-label').text(text);
@@ -200,81 +200,7 @@
                     var text =  d.getFullYear() + '/' +  ((d.getMonth()+1 < 10) ? ("0")+(d.getMonth()+1) : d.getMonth()+1) + '/' + ((d.getDate() < 10) ? ("0")+(d.getDate()) : d.getDate());
                     d3.select('#goal-label').text(text);
                 }
-            });
-        });
-
-        // Add slider
-        var heightChart = 100;
-
-        // Set slider range
-        var xChart = d3.scaleBand()
-            .range([0, width])
-            .padding(0.1);
-        var yChart = d3.scaleLinear()
-            .range([heightChart, 0]);
-
-        // Append an SVG object to the body element
-        var svgChart = d3.select('#chart')
-            .append('svg')
-            .attr('width', width)
-            .attr('height', heightChart + 5)
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + 20 + ',' + margin.right + ')');
-
-        // Load Data
-        d3.csv("data/providers.csv", function(error, data) {
-            if (error) throw error;
-
-            // Format the data
-            data.forEach(function(d) {
-                // Use unary plus operator (+) to convert strings to numbers
-                d.count = +d.count;
-            });
-
-            // Sort the data by provider size
-            data.sort(function(a, b) {
-                return b.count - a.count;
-            });
-
-            // Scale the range of the data in the domains
-            xChart.domain(data.map(function(d) {
-                return d.name;
-            }));
-            yChart.domain([0, d3.max(data, function(d) {
-                return d.count;
-            })]);
-
-            // Append the rectangles for the bar chart
-            svgChart.selectAll(".bar")
-                .data(data)
-                .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", function(d) {
-                    return xChart(d.name);
-                })
-                .attr("width", xChart.bandwidth())
-                .attr("y", function(d) {
-                    return yChart(d.count);
-                })
-                .attr("height", function(d) {
-                    return heightChart - yChart(d.count);
-                });
-            // Add the x Axis
-            svgChart.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", "translate(0," + heightChart + ")")
-                .call(d3.axisBottom(xChart))
-                .selectAll("text")
-                .attr("y", 0)
-                .attr("x", 5)
-                .attr("dy", ".35em")
-                .attr("transform", "rotate(-90)")
-                .style("text-anchor", "start");
-
-            // Add the y Axis
-            svgChart.append("g")
-                .attr("class", "y-axis")
-                .call(d3.axisLeft(yChart));
-            });
-        }
-}());
+            }); // End each()
+        }); // End select()
+    } // End ready()
+})();
