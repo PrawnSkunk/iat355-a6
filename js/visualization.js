@@ -10,7 +10,7 @@
     width = 720 - margin.left - margin.right
     goal = 1420070400;
 
-    // Datetime (2014/01/01 by efault)
+    // Datetime (2014/01/01 by default)
     var d = new Date(goal * 1000);
     var text =  d.getFullYear() + '/' +  (d.getMonth()+1 < 10 ? "0"+d.getMonth()+1 : d.getMonth()+1) + '/' + d.getDate();
     d3.select('#goal-label').text(text);
