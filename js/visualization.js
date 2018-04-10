@@ -7,7 +7,7 @@
     // Set margins
     var margin = { top: 0, left: 0, right: 0, bottom: 0},
     height = 600 - offset - margin.top - margin.bottom,
-    width = 720 - margin.left - margin.right
+    width = 630 - margin.left - margin.right
     goal = 1420070400;
 
     // Datetime (2014/01/01 by default)
@@ -15,11 +15,20 @@
     var text =  d.getFullYear() + '/' +  (d.getMonth()+1 < 10 ? "0"+d.getMonth()+1 : d.getMonth()+1) + '/' + d.getDate();
     d3.select('#goal-label').text(text);
 
-    // Create svg
-    var svg = d3.select("#map")
+    // Create left panel svg
+    var svgLeft = d3.select("#map")
         .append("svg")
         .attr("height", height + margin.top + margin.bottom)
-        .attr("width", width + margin.left + margin.right)
+        //.attr("width", width + margin.left + margin.right) // full-width map
+        .attr("width", "100%") // constain map to width of its parent
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Create right panel svg
+    var svgRight = d3.select("#details")
+        .append("svg")
+        .attr("height", 40)
+        .attr("width", "100%")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -63,7 +72,7 @@
         var selectedId = '';
 
         // Add path for each country (shapes -> path)
-        svg.selectAll(".country")
+        svgLeft.selectAll(".country")
             .data(data)
             .enter() // Can only proceed if it can attach to something
             .append("path")
@@ -117,16 +126,16 @@
 
                 // If you click on the same country twice, deselect
                 if (selectedId == d.id) {
-                // Deselect current country
-                if (selected != null) {
-                    d3.select(selected).classed("selected", false);
-                    d3.select("#" + selectedId)
-                        .classed("selected", false)
-                        .html(function(d) {
-                            return d.properties.name;
-                        });
-                } 
-            }
+                    // Deselect current country
+                    if (selected != null) {
+                        d3.select(selected).classed("selected", false);
+                        d3.select("#" + selectedId)
+                            .classed("selected", false)
+                            .html(function(d) {
+                                return d.properties.name;
+                            });
+                    } 
+                }
 
                 // Set selected country strings
                 selected = this;
@@ -169,6 +178,9 @@
         .html(function(d) {
             return d.properties.name;
         });
+
+        // Populate right panel
+        svgRight.selectAll(".detail");
         
         // Add the goal
         d3.select("#goal").on("input", function() {

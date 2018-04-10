@@ -181,7 +181,7 @@ img {
 
 .row {
     padding: 1em;
-    max-width: 45em;
+    width: 65em;
     margin: 0 auto;
 }
 
@@ -201,6 +201,33 @@ div {
     display: table;
 }
 
+/* Left Panel
+   ========================================================================== */
+.left-panel {
+    display: inline-block;
+    width: 60%;
+    float: left;
+    /*border: 1px solid;
+    background: #fff;*/
+}
+
+#map {
+    /*
+    border: 1px solid;
+    */
+}
+
+/* Right Panel
+   ========================================================================== */
+.right-panel {
+    display: inline-block;
+    background: #ccc;
+    border: 1px #333 solid;
+}
+.right-panel #details svg {
+
+}
+
 /* Footer
    ========================================================================== */
 
@@ -212,7 +239,12 @@ div {
 /* Legend
    ========================================================================== */
 
-.legend { list-style: none; }
+.legend { 
+    font-size: 0.8em;
+    list-style: none; 
+    padding-left: 0;
+    margin-top: 0;
+}
 .legend li { float: left; margin-right: 10px; }
 .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
 .legend .terminated { background-color: black; }
