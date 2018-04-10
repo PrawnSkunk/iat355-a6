@@ -153,7 +153,7 @@
             });
 
         // Add country labels
-        svg.selectAll(".country-label")
+        svgLeft.selectAll(".country-label")
         .data(data)
         .enter()
         .append("text")
@@ -186,7 +186,7 @@
         d3.select("#goal").on("input", function() {
             goal = +this.value;
             d3.select('#goal-value').text(goal);
-            svg.selectAll("svg path").each(function(d) { 
+            svgLeft.selectAll("svg path").each(function(d) { 
                 // Change class
                 if (d.status == "Added") {
                     this.classList.add(d.timestamp < goal ? "visible" : "hidden");
