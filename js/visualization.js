@@ -16,7 +16,7 @@
     d3.select('#goal-label').text(text);
 
     // Create left panel svg
-    var svgLeft = d3.select("#map")
+    var svg = d3.select("#map")
         .append("svg")
         .attr("height", height + margin.top + margin.bottom)
         //.attr("width", width + margin.left + margin.right) // full-width map
@@ -25,12 +25,9 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Create right panel svg
-    var svgRight = d3.select("#details")
-        .append("svg")
-        .attr("height", 40)
-        .attr("width", "100%")
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var rightPanel = d3.select("#charts")
+        .append("div")
+        .attr("class", "container");
 
     // Read in topojson data using the d3.json processor
     d3.queue()
@@ -67,7 +64,7 @@
         var selectedId = '';
 
         // Add path for each country (shapes -> path)
-        svgLeft.selectAll(".country")
+        svg.selectAll(".country")
             .data(data)
             .enter() // Can only proceed if it can attach to something
             .append("path")
@@ -101,6 +98,27 @@
                 d3.select("#" + d.id)
                     .classed("selected", true)
                     .html(function(d) {
+                        
+///////////////////////////////// START RIGHT PANEL //////////
+
+                        // Initialize datasets
+                        var mobile_subscriptions_data_array = [d.mobile_subscriptions_2009,d.mobile_subscriptions_2010,d.mobile_subscriptions_2011,d.mobile_subscriptions_2012,d.mobile_subscriptions_2013,d.mobile_subscriptions_2014,d.mobile_subscriptions_2015,d.mobile_subscriptions_2016];
+
+                        // Empty panel
+                        rightPanel.selectAll("div").remove();
+                        var details = rightPanel.append("div").attr("class", "details");
+
+                        // Add Country Name
+                        details.append("h3")
+                            .text(d.properties.name);
+
+                        // Add Charts
+                        details.append("p")
+                            .text( mobile_subscriptions_data_array.toString());
+
+///////////////////////////////// END RIGHT PANEL //////////
+
+                        // Set label
                         if (d.status == "Added") {
                             var date = new Date(goal * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
@@ -148,7 +166,7 @@
             });
 
         // Add country labels
-        svgLeft.selectAll(".country-label")
+        svg.selectAll(".country-label")
         .data(data)
         .enter()
         .append("text")
@@ -179,15 +197,12 @@
         .html(function(d) {
             return d.properties.name;
         });
-
-        // Populate right panel
-        svgRight.selectAll(".detail");
         
         // Add the goal
         d3.select("#goal").on("input", function() {
             goal = +this.value;
             d3.select('#goal-value').text(goal);
-            svgLeft.selectAll("svg path").each(function(d) { 
+            svg.selectAll("svg path").each(function(d) { 
                 // Change class
                 if (d.status == "Added") {
                     this.classList.add(d.timestamp < goal ? "visible" : "hidden");
