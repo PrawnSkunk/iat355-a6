@@ -157,7 +157,6 @@
         .data(data)
         .enter()
         .append("text")
-        .attr("class", "country-label")
         .attr("id", function(d) {
             return d.id;
         })
@@ -174,6 +173,13 @@
                 projection([d.geometry.coordinates[0][0][0], d.geometry.coordinates[0][0][1]]) : 
                 projection([d.geometry.coordinates[0][0][0][0], d.geometry.coordinates[0][0][0][1]]);
             return coords[1];
+        })
+        .attr("class", function(d){
+            // Prevent labels from going off-map, by changing text-anchor: end or start
+            var coords = (d.geometry.coordinates[0][0][0][0] == undefined) ? 
+            projection([d.geometry.coordinates[0][0][0], d.geometry.coordinates[0][0][1]]) : 
+            projection([d.geometry.coordinates[0][0][0][0], d.geometry.coordinates[0][0][0][1]]);
+            return (coords[0] > 300) ? "country-label label-right" : "country-label label-left";
         })
         .html(function(d) {
             return d.properties.name;

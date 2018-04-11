@@ -442,6 +442,16 @@ input[type=range]::-webkit-slider-thumb {
     transform: translate(0);
     opacity: 1;
 }
+.country-label.selected {
+    text-decoration: underline;
+}
+/* Prevent labels from going off-map */
+.label-right {
+    text-anchor: end; /* right align label if it's on the right side */
+}
+.label-left {
+    text-anchor: start; /* left align label if it's on the left side */
+}
 
 /* Slider Customization
 ========================================================================== */
