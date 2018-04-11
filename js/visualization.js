@@ -263,7 +263,7 @@
 
                 // Format the data
                 gdp_data_array.forEach(function(d) {
-                    d = +d; // Use unary plus operator (+) to convert strings to numbers
+                    d = d; // Use unary plus operator (+) to convert strings to numbers
                 });
 
                 // Scale the range of the data in the domains
