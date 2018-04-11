@@ -225,7 +225,7 @@ div {
     background: transparent;
     border: 1px #333 solid;
     */
-    width: 35%;
+    width: 36%;
     margin-left: 1em;
 }
 .bar:hover {
@@ -258,7 +258,7 @@ div {
 .legend .terminated { background-color: black; }
 .legend .online { background-color: #37b24d; }
 .legend .planned { background-color: blue; }
-.legend .prohibited { background-color: red; }
+.legend .prohibited { background-color: #b23737; }
 .legend .norollout { background-color: #ccc; }
 .legend span {
     padding-right: 0.75em;
@@ -503,6 +503,7 @@ rect.bar-after {
 .x-axis text {
     text-shadow: 1px 1px var(--lighter);
 }
+
 .y-axis text, .x-axis text {
     -webkit-user-select: none; /* Safari */        
     -moz-user-select: none; /* Firefox */

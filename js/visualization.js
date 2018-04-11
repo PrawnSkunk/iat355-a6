@@ -1,6 +1,6 @@
 // Self invoking function
 (function() {
-
+    
     // Trim Antarctica from map
     var offset = 170;
 
@@ -143,7 +143,7 @@
 
                         // -- Add Mobile subscriptions svg
                         details.append("h4")
-                            .text("Mobile Subscriptions per capita");
+                            .text("Mobile Subscriptions per 100 people");
 
                         // Initialize data array
                         var mobile_subscriptions_data_array = [d.mobile_subscriptions_2009,d.mobile_subscriptions_2010,d.mobile_subscriptions_2011,d.mobile_subscriptions_2012,d.mobile_subscriptions_2013,d.mobile_subscriptions_2014,d.mobile_subscriptions_2015,d.mobile_subscriptions_2016];
@@ -165,10 +165,10 @@
 
                         // Append an SVG object to the body element
                         var svgChart = details.append('svg')
-                            .attr('width', widthChart + 20)
+                            .attr('width', widthChart + 30)
                             .attr('height', heightChart + 15)
                             .append('g')
-                            .attr('transform', 'translate(' + 20 + ',' + 0 + ')');
+                            .attr('transform', 'translate(' + 25 + ',' + 0 + ')');
 
                         // Format the data
                         mobile_subscriptions_data_array.forEach(function(d) {
@@ -183,7 +183,7 @@
                             return d;
                         }));
                         yChart.domain([0, d3.max(mobile_subscriptions_data_array, function(d) {
-                            return d;
+                            return +d;
                         })]);
 
                         // Append the rectangles for the bar chart
@@ -211,11 +211,9 @@
                             .attr("transform", "translate(0," + heightChart + ")")
                             .call(d3.axisBottom(xChart))
                             .selectAll("text")
-                            .attr("y", 0)
-                            .attr("x", 5)
-                            .attr("dy", ".35em")
-                            .attr("transform", "rotate(-90)")
-                            .style("text-anchor", "start");
+                            .attr("y", function(d, i) {return -heightChart + 10 + yChart(d)})
+                            .attr("x", 0)
+                            .attr("dy", ".35em");
 
                         // Add the x Year helper axis
                         svgChart.append("g")
