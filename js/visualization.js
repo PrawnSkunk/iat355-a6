@@ -141,7 +141,8 @@
                         details.append("h3")
                             .text(selectedLabel);
 
-                        // -- Add Mobile subscriptions svg
+//////////////////////// Mobile Subscriptions SVG
+
                         details.append("h4")
                             .text("Mobile Subscriptions per 100 people");
 
@@ -229,6 +230,96 @@
                         svgChart.append("g")
                             .attr("class", "y-axis")
                             .call(d3.axisLeft(yChart));
+
+//////////////////////// GDP SVG
+
+                details.append("h4")
+                    .text("Gross Domestic Product ($USD Billions)");
+
+                // Initialize data array
+                var gdp_data_array = [d.gdp_2009,d.gdp_2010,d.gdp_2011,d.gdp_2012,d.gdp_2013,d.gdp_2014,d.gdp_2015,d.gdp_2016];
+                var gdp_column_array = ["2009","2010","2011","2012","2013","2014","2015","2016"];
+
+                // Add slider
+                var heightChart = 100;
+                var widthChart = 340;
+
+                // Set slider range
+                var xChart = d3.scaleBand()
+                    .range([0, widthChart])
+                    .padding(0.1);
+                var xChartYear = d3.scaleBand()
+                    .range([0, widthChart])
+                    .padding(0.1);
+                var yChart = d3.scaleLinear()
+                    .range([heightChart, 0]);
+
+                // Append an SVG object to the body element
+                var svgChart = details.append('svg')
+                    .attr('width', widthChart + 30)
+                    .attr('height', heightChart + 15)
+                    .append('g')
+                    .attr('transform', 'translate(' + 25 + ',' + 0 + ')');
+
+                // Format the data
+                gdp_data_array.forEach(function(d) {
+                    d = +d; // Use unary plus operator (+) to convert strings to numbers
+                });
+
+                // Scale the range of the data in the domains
+                xChart.domain(gdp_data_array.map(function(d) {
+                    return d;
+                }));
+                xChartYear.domain(gdp_column_array.map(function(d) {
+                    return d;
+                }));
+                yChart.domain([0, d3.max(gdp_data_array, function(d) {
+                    return +d;
+                })]);
+
+                // Append the rectangles for the bar chart
+                svgChart.selectAll(".bar")
+                    .data(gdp_data_array)
+                    .enter().append("rect")
+                    .attr("class", function(d, i){
+                        // Display grey or green bar, based on introduction of service
+                        if (selectedYear == 0) return "bar";
+                        return (gdp_column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
+                    })
+                    .attr("x", function(d) {
+                        return xChart(d);
+                    })
+                    .attr("width", xChart.bandwidth())
+                    .attr("y", function(d) {
+                        return yChart(d);
+                    })
+                    .attr("height", function(d) {
+                        return heightChart - yChart(d);
+                    });
+                // Add the x Axis
+                svgChart.append("g")
+                    .attr("class", "x-axis")
+                    .attr("transform", "translate(0," + heightChart + ")")
+                    .call(d3.axisBottom(xChart))
+                    .selectAll("text")
+                    .attr("y", function(d, i) {return -heightChart + 10 + yChart(d)})
+                    .attr("x", 0)
+                    .attr("dy", ".35em");
+
+                // Add the x Year helper axis
+                svgChart.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", "translate(0," + heightChart + ")")
+                .call(d3.axisBottom(xChartYear))
+                .selectAll("text")
+                .attr("y", 10)
+                .attr("x", 0)
+                .attr("dy", ".35em")
+                
+                // Add the y Axis
+                svgChart.append("g")
+                    .attr("class", "y-axis")
+                    .call(d3.axisLeft(yChart));
 
 ///////////////////////////////// END RIGHT PANEL /////////////////////////////////
 
