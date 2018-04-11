@@ -29,6 +29,12 @@
         .append("div")
         .attr("class", "container");
 
+        // No country selected
+        rightPanel.append("div")
+            .attr("class", "details")
+            .append("h3")
+            .text("No country selected.");
+
     // Read in topojson data using the d3.json processor
     d3.queue()
         .defer(d3.json, "data/countries.json") // var countries
@@ -99,26 +105,30 @@
                     .classed("selected", true)
                     .html(function(d) {
 
-                        // Set label
+                        var selectedYear = 0;
                         var selectedLabel = "";
 
                         if (d.status == "Added") {
-                            var date = new Date(goal * 1000);
+                            var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
                             selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText + ")";
+                            selectedYear = date.getFullYear();
                         }
                         else if (d.status == "Prohibited") {
-                            var date = new Date(goal * 1000);
+                            var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
                             selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText +" Prohibited"+ ")";
+                            selectedYear = 0;
                         }
                         else if (d.status == "Terminated") {
-                            var date = new Date(goal * 1000);
+                            var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
                             selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText +" Terminated"+ ")";
+                            selectedYear = 0;
                         }
                         else {
                             selectedLabel = d.properties.name + " (No rollout)";
+                            selectedYear = 0;
                         }
                         
 ///////////////////////////////// START RIGHT PANEL /////////////////////////////////
@@ -137,13 +147,17 @@
 
                         // Initialize data array
                         var mobile_subscriptions_data_array = [d.mobile_subscriptions_2009,d.mobile_subscriptions_2010,d.mobile_subscriptions_2011,d.mobile_subscriptions_2012,d.mobile_subscriptions_2013,d.mobile_subscriptions_2014,d.mobile_subscriptions_2015,d.mobile_subscriptions_2016];
-                        
+                        var mobile_subscriptions_column_array = ["2009","2010","2011","2012","2013","2014","2015","2016"];
+
                         // Add slider
                         var heightChart = 100;
-                        var widthChart = 360;
+                        var widthChart = 340;
 
                         // Set slider range
                         var xChart = d3.scaleBand()
+                            .range([0, widthChart])
+                            .padding(0.1);
+                        var xChartYear = d3.scaleBand()
                             .range([0, widthChart])
                             .padding(0.1);
                         var yChart = d3.scaleLinear()
@@ -151,24 +165,21 @@
 
                         // Append an SVG object to the body element
                         var svgChart = details.append('svg')
-                            .attr('width', widthChart)
-                            .attr('height', heightChart + 5)
+                            .attr('width', widthChart + 20)
+                            .attr('height', heightChart + 15)
                             .append('g')
-                            .attr('transform', 'translate(' + margin.left + 20 + ',' + margin.right + ')');
+                            .attr('transform', 'translate(' + 20 + ',' + 0 + ')');
 
                         // Format the data
                         mobile_subscriptions_data_array.forEach(function(d) {
-                            // Use unary plus operator (+) to convert strings to numbers
-                            d = +d;
+                            d = +d; // Use unary plus operator (+) to convert strings to numbers
                         });
-
-                        // Sort the data by provider size
-                        // mobile_subscriptions_data_array.sort(function(a, b) {
-                        //     return b - a;
-                        // });
 
                         // Scale the range of the data in the domains
                         xChart.domain(mobile_subscriptions_data_array.map(function(d) {
+                            return d;
+                        }));
+                        xChartYear.domain(mobile_subscriptions_column_array.map(function(d) {
                             return d;
                         }));
                         yChart.domain([0, d3.max(mobile_subscriptions_data_array, function(d) {
@@ -179,7 +190,11 @@
                         svgChart.selectAll(".bar")
                             .data(mobile_subscriptions_data_array)
                             .enter().append("rect")
-                            .attr("class", "bar")
+                            .attr("class", function(d, i){
+                                // Display grey or green bar, based on introduction of service
+                                if (selectedYear == 0) return "bar";
+                                return (mobile_subscriptions_column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
+                            })
                             .attr("x", function(d) {
                                 return xChart(d);
                             })
@@ -202,6 +217,16 @@
                             .attr("transform", "rotate(-90)")
                             .style("text-anchor", "start");
 
+                        // Add the x Year helper axis
+                        svgChart.append("g")
+                        .attr("class", "x-axis")
+                        .attr("transform", "translate(0," + heightChart + ")")
+                        .call(d3.axisBottom(xChartYear))
+                        .selectAll("text")
+                        .attr("y", 10)
+                        .attr("x", 0)
+                        .attr("dy", ".35em")
+                        
                         // Add the y Axis
                         svgChart.append("g")
                             .attr("class", "y-axis")
