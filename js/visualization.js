@@ -35,7 +35,7 @@
     // Read in topojson data using the d3.json processor
     d3.queue()
         .defer(d3.json, "data/countries.json") // var countries
-        .defer(d3.csv, "data/freebasics.csv") // var fb
+        .defer(d3.csv, "data/data.csv") // var data_unformatted
         .await(ready);
 
     // Translate between a round globe and flat screen
@@ -50,20 +50,15 @@
 
     // Run once the DOM is ready
     // (error, defer1, defer2, ...)
-    function ready(error, countries, fb) {
+    function ready(error, countries, csv) {
 
         // Extract countries from topojson and countries key
         var features = topojson.feature(countries, countries.objects.units).features;
 
-        // Left Join csvs
-        var data = features.map(function(topo) {
-            return Object.assign({}, topo, fb.reduce(function(empty, freebasics) {
-                // If country codes match
-                if (freebasics.code === topo.id) {
-                    return freebasics;
-                } else {
-                    return empty;
-                }
+        // Left join if country codes match, else return empty
+        var data = features.map(function(d) {
+            return Object.assign({}, d, csv.reduce(function(empty, join) {
+                return (join.code === d.id) ? join : empty;
             }, {}))
         });
 
