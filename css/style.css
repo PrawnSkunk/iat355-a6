@@ -221,9 +221,13 @@ div {
    ========================================================================== */
 .right-panel {
     display: inline-block;
-    background: #ccc;
+    background: transparent;
     border: 1px #333 solid;
     width: 35%;
+}
+.bar:hover {
+    transition: fill .4s ease;
+    fill: #ddd;
 }
 .right-panel #charts {
     width: 100%;
@@ -485,7 +489,7 @@ input[type=range]::-webkit-slider-thumb {
 ========================================================================== */
 
 rect.bar {
-    fill: var(--darker);
+    fill: var(--lighter);
 }
 .x-axis text {
     text-shadow: 1px 1px var(--lighter);

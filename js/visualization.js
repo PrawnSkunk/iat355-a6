@@ -98,45 +98,120 @@
                 d3.select("#" + d.id)
                     .classed("selected", true)
                     .html(function(d) {
-                        
-///////////////////////////////// START RIGHT PANEL //////////
-
-                        // Initialize datasets
-                        var mobile_subscriptions_data_array = [d.mobile_subscriptions_2009,d.mobile_subscriptions_2010,d.mobile_subscriptions_2011,d.mobile_subscriptions_2012,d.mobile_subscriptions_2013,d.mobile_subscriptions_2014,d.mobile_subscriptions_2015,d.mobile_subscriptions_2016];
-
-                        // Empty panel
-                        rightPanel.selectAll("div").remove();
-                        var details = rightPanel.append("div").attr("class", "details");
-
-                        // Add Country Name
-                        details.append("h3")
-                            .text(d.properties.name);
-
-                        // Add Charts
-                        details.append("p")
-                            .text( mobile_subscriptions_data_array.toString());
-
-///////////////////////////////// END RIGHT PANEL //////////
 
                         // Set label
+                        var selectedLabel = "";
+
                         if (d.status == "Added") {
                             var date = new Date(goal * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
-                            return d.properties.name + " (" + d.provider + ", " + dateText + ")";
+                            selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText + ")";
                         }
-                        if (d.status == "Prohibited") {
+                        else if (d.status == "Prohibited") {
                             var date = new Date(goal * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
-                            return d.properties.name + " (" + d.provider + ", " + dateText +" Prohibited"+ ")";
+                            selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText +" Prohibited"+ ")";
                         }
-                        if (d.status == "Terminated") {
+                        else if (d.status == "Terminated") {
                             var date = new Date(goal * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
-                            return d.properties.name + " (" + d.provider + ", " + dateText +" Terminated"+ ")";
+                            selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText +" Terminated"+ ")";
                         }
-                        return d.properties.name + " (No rollout)";
-                    });
+                        else {
+                            selectedLabel = d.properties.name + " (No rollout)";
+                        }
+                        
+///////////////////////////////// START RIGHT PANEL /////////////////////////////////
 
+                        // Clear the right panel
+                        rightPanel.selectAll("div").remove();
+                        var details = rightPanel.append("div").attr("class", "details");
+
+                        // Add country title
+                        details.append("h3")
+                            .text(selectedLabel);
+
+                        // -- Add Mobile subscriptions svg
+                        details.append("h4")
+                            .text("Mobile Subscriptions per capita");
+
+                        // Initialize data array
+                        var mobile_subscriptions_data_array = [d.mobile_subscriptions_2009,d.mobile_subscriptions_2010,d.mobile_subscriptions_2011,d.mobile_subscriptions_2012,d.mobile_subscriptions_2013,d.mobile_subscriptions_2014,d.mobile_subscriptions_2015,d.mobile_subscriptions_2016];
+                        
+                        // Add slider
+                        var heightChart = 100;
+                        var widthChart = 360;
+
+                        // Set slider range
+                        var xChart = d3.scaleBand()
+                            .range([0, widthChart])
+                            .padding(0.1);
+                        var yChart = d3.scaleLinear()
+                            .range([heightChart, 0]);
+
+                        // Append an SVG object to the body element
+                        var svgChart = details.append('svg')
+                            .attr('width', widthChart)
+                            .attr('height', heightChart + 5)
+                            .append('g')
+                            .attr('transform', 'translate(' + margin.left + 20 + ',' + margin.right + ')');
+
+                        // Format the data
+                        mobile_subscriptions_data_array.forEach(function(d) {
+                            // Use unary plus operator (+) to convert strings to numbers
+                            d = +d;
+                        });
+
+                        // Sort the data by provider size
+                        // mobile_subscriptions_data_array.sort(function(a, b) {
+                        //     return b - a;
+                        // });
+
+                        // Scale the range of the data in the domains
+                        xChart.domain(mobile_subscriptions_data_array.map(function(d) {
+                            return d;
+                        }));
+                        yChart.domain([0, d3.max(mobile_subscriptions_data_array, function(d) {
+                            return d;
+                        })]);
+
+                        // Append the rectangles for the bar chart
+                        svgChart.selectAll(".bar")
+                            .data(mobile_subscriptions_data_array)
+                            .enter().append("rect")
+                            .attr("class", "bar")
+                            .attr("x", function(d) {
+                                return xChart(d);
+                            })
+                            .attr("width", xChart.bandwidth())
+                            .attr("y", function(d) {
+                                return yChart(d);
+                            })
+                            .attr("height", function(d) {
+                                return heightChart - yChart(d);
+                            });
+                        // Add the x Axis
+                        svgChart.append("g")
+                            .attr("class", "x-axis")
+                            .attr("transform", "translate(0," + heightChart + ")")
+                            .call(d3.axisBottom(xChart))
+                            .selectAll("text")
+                            .attr("y", 0)
+                            .attr("x", 5)
+                            .attr("dy", ".35em")
+                            .attr("transform", "rotate(-90)")
+                            .style("text-anchor", "start");
+
+                        // Add the y Axis
+                        svgChart.append("g")
+                            .attr("class", "y-axis")
+                            .call(d3.axisLeft(yChart));
+
+///////////////////////////////// END RIGHT PANEL /////////////////////////////////
+
+                        return d.properties.name;
+                    });
+                
                 // If you click on the same country twice, deselect
                 if (selectedId == d.id) {
                     // Deselect current country
@@ -178,14 +253,14 @@
             var coords = (d.geometry.coordinates[0][0][0][0] == undefined) ? 
                 projection([d.geometry.coordinates[0][0][0], d.geometry.coordinates[0][0][1]]) : 
                 projection([d.geometry.coordinates[0][0][0][0], d.geometry.coordinates[0][0][0][1]]);
-            return coords[0];
+            return coords[0] - 10;
         })
         .attr("y", function(d) {
             // Get y coordinate based on shape type (3d vs 4d)
             var coords = (d.geometry.coordinates[0][0][0][0] == undefined) ? 
                 projection([d.geometry.coordinates[0][0][0], d.geometry.coordinates[0][0][1]]) : 
                 projection([d.geometry.coordinates[0][0][0][0], d.geometry.coordinates[0][0][0][1]]);
-            return coords[1];
+            return coords[1] - 10;
         })
         .attr("class", function(d){
             // Prevent labels from going off-map, by changing text-anchor: end or start
