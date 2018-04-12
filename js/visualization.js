@@ -241,17 +241,17 @@
                         else if (d.status == "Prohibited") {
                             var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
-                            selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText +" Prohibited"+ ")";
+                            selectedLabel = d.properties.name + " (" + "Prohibited by Net Neutrality" + ")";
                             selectedYear = 0;
                         }
                         else if (d.status == "Terminated") {
                             var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
-                            selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText +" Terminated"+ ")";
+                            selectedLabel = d.properties.name + " (" + "Service Terminated" + ")";
                             selectedYear = 0;
                         }
                         else {
-                            selectedLabel = d.properties.name + " (No rollout)";
+                            selectedLabel = d.properties.name + " (Not Available)";
                             selectedYear = 0;
                         }
                         
@@ -292,8 +292,14 @@
                 
                 // If you click on the same country twice, deselect
                 if (selectedId == d.id) {
-                    // Deselect current country
                     if (selected != null) {
+                        // Clear the right panel
+                        rightPanel.selectAll("div").remove();
+                        rightPanel.append("div")
+                        .attr("class", "details")
+                        .append("h3")
+                        .text("No country selected.");
+                        // Deselect current country
                         d3.select(selected).classed("selected", false);
                         d3.select("#" + selectedId)
                             .classed("selected", false)
