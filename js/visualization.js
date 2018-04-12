@@ -1,6 +1,7 @@
 // Self invoking function
 (function() {
     
+    var selectedStatus;
     var selectedYear = 0;
     var selectedLabel = "";
     var details;
@@ -105,8 +106,8 @@
             .enter().append("rect")
             .attr("class", function(f, i){
                 // Display grey or green bar, based on introduction of service
-                if (d.status == "Prohibited") return "bar bar-prohibited";
-                if (d.status == "Terminated") return "bar bar-terminated";
+                if (selectedStatus == "Prohibited") return "bar bar-prohibited";
+                if (selectedStatus == "Terminated") return "bar bar-terminated";
                 if (selectedYear == 0) return "bar";
                 return (column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
             })
@@ -178,6 +179,7 @@
                     return "country " + (d.timestamp < goal ? "prohibited" : "hidden");
                 }
                 if (d.status == "Terminated") {
+                    
                     return "country " + (d.timestamp < goal ? "terminated" : "hidden");
                 }
                 return "country";
@@ -199,7 +201,7 @@
                 d3.select("#" + d.id)
                     .classed("selected", true)
                     .html(function(d) {
-
+                        selectedStatus = d.status;
                         if (d.status == "Added") {
                             var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
