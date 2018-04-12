@@ -3,6 +3,7 @@
     
     var selectedStatus;
     var selectedYear = 0;
+    var selectedTerminatedYear = 0;
     var selectedLabel = "";
     var details;
 
@@ -107,7 +108,7 @@
             .attr("class", function(f, i){
                 // Display grey or green bar, based on introduction of service
                 if (selectedStatus == "Prohibited") return "bar bar-prohibited";
-                if (selectedStatus == "Terminated") return "bar bar-terminated";
+                if (selectedTerminatedYear > 0 && column_array[i] >= selectedTerminatedYear) return "bar bar-terminated";
                 if (selectedYear == 0) return "bar";
                 return (column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
             })
@@ -133,13 +134,13 @@
 
         // Add the x Year helper axis
         svgChart.append("g")
-        .attr("class", "x-axis")
-        .attr("transform", "translate(0," + heightChart + ")")
-        .call(d3.axisBottom(xChartYear))
-        .selectAll("text")
-        .attr("y", 10)
-        .attr("x", 0)
-        .attr("dy", ".35em")
+            .attr("class", "x-axis")
+            .attr("transform", "translate(0," + heightChart + ")")
+            .call(d3.axisBottom(xChartYear))
+            .selectAll("text")
+            .attr("y", 10)
+            .attr("x", 0)
+            .attr("dy", ".35em")
         
         // Add the y Axis
         svgChart.append("g")
@@ -179,7 +180,6 @@
                     return "country " + (d.timestamp < goal ? "prohibited" : "hidden");
                 }
                 if (d.status == "Terminated") {
-                    
                     return "country " + (d.timestamp < goal ? "terminated" : "hidden");
                 }
                 return "country";
@@ -201,12 +201,17 @@
                 d3.select("#" + d.id)
                     .classed("selected", true)
                     .html(function(d) {
+                        selectedTerminatedYear = 0;
                         selectedStatus = d.status;
                         if (d.status == "Added") {
                             var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
                             selectedLabel = d.properties.name + " (" + d.provider + ", " + dateText + ")";
                             selectedYear = date.getFullYear();
+                            if (d.termination_timestamp > 0) {
+                                var date = new Date(d.termination_timestamp * 1000);
+                                selectedTerminatedYear = date.getFullYear();
+                            }
                         }
                         else if (d.status == "Prohibited") {
                             var date = new Date(d.timestamp * 1000);
@@ -328,6 +333,7 @@
             svg.selectAll("svg path").each(function(d) { 
                 // Change class
                 if (d.status == "Added") {
+                    (d.termination_timestamp > 0 && d.termination_timestamp < goal) ? this.classList.add("terminated") : this.classList.remove("terminated");
                     this.classList.add(d.timestamp < goal ? "visible" : "hidden");
                     this.classList.remove(d.timestamp < goal ? "hidden" : "visible");
                     // Update label
