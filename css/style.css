@@ -17,7 +17,7 @@
     --primary-light: #555;
     --primary-accent: #3E353A;
     --open: #37b24d;
-    --closed: #f03e3e;
+    --closed: #b23737;
 }
 
 /* Media Queries
@@ -96,7 +96,7 @@ img {
 #banner {
     padding: 0;
     margin: 0;
-    background-color: var(--primary-light);
+    background-color: #3b5998;
 }
 
 #banner #moving-image {
@@ -503,6 +503,12 @@ rect.bar-before {
 }
 rect.bar-after {
     fill: var(--open);
+}
+rect.bar-prohibited {
+    fill: var(--closed);
+}
+rect.bar-terminated {
+    fill: #000;
 }
 .x-axis text {
     text-shadow: 1px 1px var(--lighter);

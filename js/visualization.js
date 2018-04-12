@@ -1,12 +1,16 @@
 // Self invoking function
 (function() {
     
+    var selectedYear = 0;
+    var selectedLabel = "";
+    var details;
+
     // Trim Antarctica from map
-    var offset = 170;
+    var offset = 200;
 
     // Set margins
     var margin = { top: 0, left: 0, right: 0, bottom: 0},
-    height = 600 - offset - margin.top - margin.bottom,
+    height = 660 - offset - margin.top - margin.bottom,
     width = 630 - margin.left - margin.right
     goal = 1420070400;
 
@@ -50,6 +54,97 @@
     // Create a path and set its projection
     var path = d3.geoPath()
         .projection(projection);
+
+    // Programatically generate a chart in the right panel
+    function generateChart(title, data_array, column_array) {
+
+        // Add chart title
+        details.append("h4")
+            .text(title);
+
+        // Add slider
+        var heightChart = 90;
+        var widthChart = 340;
+
+        // Set slider range
+        var xChart = d3.scaleBand()
+            .range([0, widthChart])
+            .padding(0.1);
+        var xChartYear = d3.scaleBand()
+            .range([0, widthChart])
+            .padding(0.1);
+        var yChart = d3.scaleLinear()
+            .range([heightChart, 0]);
+
+        // Append an SVG object to the body element
+        var svgChart = details.append('svg')
+            .attr('width', widthChart + 30)
+            .attr('height', heightChart + 15)
+            .append('g')
+            .attr('transform', 'translate(' + 25 + ',' + 0 + ')');
+
+        // Format the data
+        data_array.forEach(function(d) {
+            d = +d; // Use unary plus operator (+) to convert strings to numbers
+        });
+
+        // Scale the range of the data in the domains
+        xChart.domain(data_array.map(function(d) {
+            return d;
+        }));
+        xChartYear.domain(column_array.map(function(d) {
+            return d;
+        }));
+        yChart.domain([0, d3.max(data_array, function(d) {
+            return +d;
+        })]);
+
+        // Append the rectangles for the bar chart
+        svgChart.selectAll(".bar")
+            .data(data_array)
+            .enter().append("rect")
+            .attr("class", function(f, i){
+                // Display grey or green bar, based on introduction of service
+                if (d.status == "Prohibited") return "bar bar-prohibited";
+                if (d.status == "Terminated") return "bar bar-terminated";
+                if (selectedYear == 0) return "bar";
+                return (column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
+            })
+            .attr("x", function(d) {
+                return xChart(d);
+            })
+            .attr("width", xChart.bandwidth())
+            .attr("y", function(d) {
+                return yChart(d);
+            })
+            .attr("height", function(d) {
+                return heightChart - yChart(d);
+            });
+        // Add the x Axis
+        svgChart.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", "translate(0," + heightChart + ")")
+            .call(d3.axisBottom(xChart))
+            .selectAll("text")
+            .attr("y", function(d, i) {return -heightChart + 10 + yChart(d)})
+            .attr("x", 0)
+            .attr("dy", ".35em");
+
+        // Add the x Year helper axis
+        svgChart.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", "translate(0," + heightChart + ")")
+        .call(d3.axisBottom(xChartYear))
+        .selectAll("text")
+        .attr("y", 10)
+        .attr("x", 0)
+        .attr("dy", ".35em")
+        
+        // Add the y Axis
+        svgChart.append("g")
+            .attr("class", "y-axis")
+            .call(d3.axisLeft(yChart));
+    }
 
     // Run once the DOM is ready
     // (error, defer1, defer2, ...)
@@ -105,9 +200,6 @@
                     .classed("selected", true)
                     .html(function(d) {
 
-                        var selectedYear = 0;
-                        var selectedLabel = "";
-
                         if (d.status == "Added") {
                             var date = new Date(d.timestamp * 1000);
                             var dateText =  date.getFullYear() + '/' +  ((date.getMonth()+1 < 10) ? ("0")+(date.getMonth()+1) : date.getMonth()+1) + '/' + ((date.getDate() < 10) ? ("0")+(date.getDate()) : date.getDate());
@@ -135,281 +227,31 @@
 
                         // Clear the right panel
                         rightPanel.selectAll("div").remove();
-                        var details = rightPanel.append("div").attr("class", "details");
+                        details = rightPanel.append("div").attr("class", "details");
+                        var title;
+                        var data_array;
+                        var range;
 
-                        // Add country title
-                        details.append("h3")
-                            .text(selectedLabel);
+                        // Set selected country title
+                        details.append("h3").text(selectedLabel);
 
-//////////////////////// Mobile Subscriptions SVG
+                        // Generate Population using Internet Chart
+                        title = "% of population using the Internet";
+                        data_array = [d.individual_net_usage_2009,d.individual_net_usage_2010,d.individual_net_usage_2011,d.individual_net_usage_2012,d.individual_net_usage_2013,d.individual_net_usage_2014,d.individual_net_usage_2015,d.individual_net_usage_2016];
+                        range = ["2009","2010","2011","2012","2013","2014","2015","2016"];
+                        generateChart(title, data_array, range);
 
-                        details.append("h4")
-                            .text("Mobile Subscriptions per 100 people");
+                        // Generate Mobile Subscriptions Chart
+                        title = "Mobile Subscriptions per 100 people";
+                        data_array = [d.mobile_subscriptions_2009,d.mobile_subscriptions_2010,d.mobile_subscriptions_2011,d.mobile_subscriptions_2012,d.mobile_subscriptions_2013,d.mobile_subscriptions_2014,d.mobile_subscriptions_2015,d.mobile_subscriptions_2016];
+                        range = ["2009","2010","2011","2012","2013","2014","2015","2016"];
+                        generateChart(title, data_array, range);
 
-                        // Initialize data array
-                        var mobile_subscriptions_data_array = [d.mobile_subscriptions_2009,d.mobile_subscriptions_2010,d.mobile_subscriptions_2011,d.mobile_subscriptions_2012,d.mobile_subscriptions_2013,d.mobile_subscriptions_2014,d.mobile_subscriptions_2015,d.mobile_subscriptions_2016];
-                        var mobile_subscriptions_column_array = ["2009","2010","2011","2012","2013","2014","2015","2016"];
-
-                        // Add slider
-                        var heightChart = 100;
-                        var widthChart = 340;
-
-                        // Set slider range
-                        var xChart = d3.scaleBand()
-                            .range([0, widthChart])
-                            .padding(0.1);
-                        var xChartYear = d3.scaleBand()
-                            .range([0, widthChart])
-                            .padding(0.1);
-                        var yChart = d3.scaleLinear()
-                            .range([heightChart, 0]);
-
-                        // Append an SVG object to the body element
-                        var svgChart = details.append('svg')
-                            .attr('width', widthChart + 30)
-                            .attr('height', heightChart + 15)
-                            .append('g')
-                            .attr('transform', 'translate(' + 25 + ',' + 0 + ')');
-
-                        // Format the data
-                        mobile_subscriptions_data_array.forEach(function(d) {
-                            d = +d; // Use unary plus operator (+) to convert strings to numbers
-                        });
-
-                        // Scale the range of the data in the domains
-                        xChart.domain(mobile_subscriptions_data_array.map(function(d) {
-                            return d;
-                        }));
-                        xChartYear.domain(mobile_subscriptions_column_array.map(function(d) {
-                            return d;
-                        }));
-                        yChart.domain([0, d3.max(mobile_subscriptions_data_array, function(d) {
-                            return +d;
-                        })]);
-
-                        // Append the rectangles for the bar chart
-                        svgChart.selectAll(".bar")
-                            .data(mobile_subscriptions_data_array)
-                            .enter().append("rect")
-                            .attr("class", function(d, i){
-                                // Display grey or green bar, based on introduction of service
-                                if (selectedYear == 0) return "bar";
-                                return (mobile_subscriptions_column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
-                            })
-                            .attr("x", function(d) {
-                                return xChart(d);
-                            })
-                            .attr("width", xChart.bandwidth())
-                            .attr("y", function(d) {
-                                return yChart(d);
-                            })
-                            .attr("height", function(d) {
-                                return heightChart - yChart(d);
-                            });
-                        // Add the x Axis
-                        svgChart.append("g")
-                            .attr("class", "x-axis")
-                            .attr("transform", "translate(0," + heightChart + ")")
-                            .call(d3.axisBottom(xChart))
-                            .selectAll("text")
-                            .attr("y", function(d, i) {return -heightChart + 10 + yChart(d)})
-                            .attr("x", 0)
-                            .attr("dy", ".35em");
-
-                        // Add the x Year helper axis
-                        svgChart.append("g")
-                        .attr("class", "x-axis")
-                        .attr("transform", "translate(0," + heightChart + ")")
-                        .call(d3.axisBottom(xChartYear))
-                        .selectAll("text")
-                        .attr("y", 10)
-                        .attr("x", 0)
-                        .attr("dy", ".35em")
-                        
-                        // Add the y Axis
-                        svgChart.append("g")
-                            .attr("class", "y-axis")
-                            .call(d3.axisLeft(yChart));
-
-//////////////////////// GDP SVG
-
-                details.append("h4")
-                    .text("Gross Domestic Product ($USD Billions)");
-
-                // Initialize data array
-                var gdp_data_array = [d.gdp_2009,d.gdp_2010,d.gdp_2011,d.gdp_2012,d.gdp_2013,d.gdp_2014,d.gdp_2015,d.gdp_2016];
-                var gdp_column_array = ["2009","2010","2011","2012","2013","2014","2015","2016"];
-
-                // Add slider
-                var heightChart = 100;
-                var widthChart = 340;
-
-                // Set slider range
-                var xChart = d3.scaleBand()
-                    .range([0, widthChart])
-                    .padding(0.1);
-                var xChartYear = d3.scaleBand()
-                    .range([0, widthChart])
-                    .padding(0.1);
-                var yChart = d3.scaleLinear()
-                    .range([heightChart, 0]);
-
-                // Append an SVG object to the body element
-                var svgChart = details.append('svg')
-                    .attr('width', widthChart + 30)
-                    .attr('height', heightChart + 15)
-                    .append('g')
-                    .attr('transform', 'translate(' + 25 + ',' + 0 + ')');
-
-                // Format the data
-                gdp_data_array.forEach(function(d) {
-                    d = d; // Use unary plus operator (+) to convert strings to numbers
-                });
-
-                // Scale the range of the data in the domains
-                xChart.domain(gdp_data_array.map(function(d) {
-                    return d;
-                }));
-                xChartYear.domain(gdp_column_array.map(function(d) {
-                    return d;
-                }));
-                yChart.domain([0, d3.max(gdp_data_array, function(d) {
-                    return +d;
-                })]);
-
-                // Append the rectangles for the bar chart
-                svgChart.selectAll(".bar")
-                    .data(gdp_data_array)
-                    .enter().append("rect")
-                    .attr("class", function(d, i){
-                        // Display grey or green bar, based on introduction of service
-                        if (selectedYear == 0) return "bar";
-                        return (gdp_column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
-                    })
-                    .attr("x", function(d) {
-                        return xChart(d);
-                    })
-                    .attr("width", xChart.bandwidth())
-                    .attr("y", function(d) {
-                        return yChart(d);
-                    })
-                    .attr("height", function(d) {
-                        return heightChart - yChart(d);
-                    });
-                // Add the x Axis
-                svgChart.append("g")
-                    .attr("class", "x-axis")
-                    .attr("transform", "translate(0," + heightChart + ")")
-                    .call(d3.axisBottom(xChart))
-                    .selectAll("text")
-                    .attr("y", function(d, i) {return -heightChart + 10 + yChart(d)})
-                    .attr("x", 0)
-                    .attr("dy", ".35em");
-
-                // Add the x Year helper axis
-                svgChart.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", "translate(0," + heightChart + ")")
-                .call(d3.axisBottom(xChartYear))
-                .selectAll("text")
-                .attr("y", 10)
-                .attr("x", 0)
-                .attr("dy", ".35em")
-                
-                // Add the y Axis
-                svgChart.append("g")
-                    .attr("class", "y-axis")
-                    .call(d3.axisLeft(yChart));
-                    
-//////////////////////// Individuals using Internet
-
-                details.append("h4")
-                    .text("% of population using the Internet");
-
-                // Initialize data array
-                var individual_net_usage_data_array = [d.individual_net_usage_2009,d.individual_net_usage_2010,d.individual_net_usage_2011,d.individual_net_usage_2012,d.individual_net_usage_2013,d.individual_net_usage_2014,d.individual_net_usage_2015,d.individual_net_usage_2016];
-                var individual_net_usage_column_array = ["2009","2010","2011","2012","2013","2014","2015","2016"];
-
-                // Add slider
-                var heightChart = 100;
-                var widthChart = 340;
-
-                // Set slider range
-                var xChart = d3.scaleBand()
-                    .range([0, widthChart])
-                    .padding(0.1);
-                var xChartYear = d3.scaleBand()
-                    .range([0, widthChart])
-                    .padding(0.1);
-                var yChart = d3.scaleLinear()
-                    .range([heightChart, 0]);
-
-                // Append an SVG object to the body element
-                var svgChart = details.append('svg')
-                    .attr('width', widthChart + 30)
-                    .attr('height', heightChart + 15)
-                    .append('g')
-                    .attr('transform', 'translate(' + 25 + ',' + 0 + ')');
-
-                // Format the data
-                individual_net_usage_data_array.forEach(function(d) {
-                    d = d; // Use unary plus operator (+) to convert strings to numbers
-                });
-
-                // Scale the range of the data in the domains
-                xChart.domain(individual_net_usage_data_array.map(function(d) {
-                    return d;
-                }));
-                xChartYear.domain(individual_net_usage_column_array.map(function(d) {
-                    return d;
-                }));
-                yChart.domain([0, d3.max(individual_net_usage_data_array, function(d) {
-                    return +d;
-                })]);
-
-                // Append the rectangles for the bar chart
-                svgChart.selectAll(".bar")
-                    .data(individual_net_usage_data_array)
-                    .enter().append("rect")
-                    .attr("class", function(d, i){
-                        // Display grey or green bar, based on introduction of service
-                        if (selectedYear == 0) return "bar";
-                        return (individual_net_usage_column_array[i] >= selectedYear) ? "bar bar-after" : "bar bar-before";
-                    })
-                    .attr("x", function(d) {
-                        return xChart(d);
-                    })
-                    .attr("width", xChart.bandwidth())
-                    .attr("y", function(d) {
-                        return yChart(d);
-                    })
-                    .attr("height", function(d) {
-                        return heightChart - yChart(d);
-                    });
-                // Add the x Axis
-                svgChart.append("g")
-                    .attr("class", "x-axis")
-                    .attr("transform", "translate(0," + heightChart + ")")
-                    .call(d3.axisBottom(xChart))
-                    .selectAll("text")
-                    .attr("y", function(d, i) {return -heightChart + 10 + yChart(d)})
-                    .attr("x", 0)
-                    .attr("dy", ".35em");
-
-                // Add the x Year helper axis
-                svgChart.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", "translate(0," + heightChart + ")")
-                .call(d3.axisBottom(xChartYear))
-                .selectAll("text")
-                .attr("y", 10)
-                .attr("x", 0)
-                .attr("dy", ".35em")
-                
-                // Add the y Axis
-                svgChart.append("g")
-                    .attr("class", "y-axis")
-                    .call(d3.axisLeft(yChart));
+                        // GDP SVG
+                        title = "Gross Domestic Product ($USD Billions)";
+                        data_array = [d.gdp_2009,d.gdp_2010,d.gdp_2011,d.gdp_2012,d.gdp_2013,d.gdp_2014,d.gdp_2015,d.gdp_2016];
+                        range = ["2009","2010","2011","2012","2013","2014","2015","2016"];
+                        generateChart(title, data_array, range);
 
 ///////////////////////////////// END RIGHT PANEL /////////////////////////////////
 
