@@ -6,6 +6,7 @@
     var selectedTerminatedYear = 0;
     var selectedLabel = "";
     var details;
+    var centered;
 
     // Trim Antarctica from map
     var offset = 200;
@@ -27,7 +28,8 @@
         .attr("height", height + margin.top + margin.bottom)
         //.attr("width", width + margin.left + margin.right) // full-width map
         .attr("width", "100%") // constain map to width of its parent
-        .append("g")
+    
+    var g = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Create right panel svg
@@ -167,7 +169,7 @@
         var selectedId = '';
 
         // Add path for each country (shapes -> path)
-        svg.selectAll(".country")
+        g.selectAll(".country")
             .data(data)
             .enter() // Can only proceed if it can attach to something
             .append("path")
@@ -187,6 +189,29 @@
             .attr("d", path)
             // Add .selected class on click
             .on("click", function(d) {
+                var x, y, k;
+
+                if (d && centered !== d) {
+                  var centroid = path.centroid(d);
+                  x = centroid[0];
+                  y = centroid[1];
+                  k = 4;
+                  centered = d;
+                } else {
+                  x = width / 2;
+                  y = height / 2;
+                  k = 1;
+                  centered = null;
+                }
+              
+                g.selectAll("path")
+                    .classed("active", centered && function(d) { return d === centered; });
+              
+                g.transition()
+                    .duration(750)
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+                    .style("stroke-width", 1.5 / k + "px");
+
                 // Deselect previous country
                 if (selected != null) {
                     d3.select(selected).classed("selected", false);
@@ -261,7 +286,7 @@
                         generateChart(title, data_array, range);
 
 ///////////////////////////////// END RIGHT PANEL /////////////////////////////////
-
+                        if (centered == null)
                         return d.properties.name;
                     });
                 
