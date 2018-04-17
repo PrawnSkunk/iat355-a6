@@ -394,6 +394,7 @@ input[type=range]::-webkit-slider-thumb {
     transition: fill .1s ease;
     fill: #3b5998!important;
 }
+
 .country.selected.hovering {
     transition: fill .1s ease;
     fill: #3b5998 !important;
@@ -412,7 +413,7 @@ input[type=range]::-webkit-slider-thumb {
 
 .country.visible {
     transition: fill .4s ease;
-    fill: #37b24d;
+    fill: #6cb379;
 }
 
 .country.prohibited{
@@ -422,7 +423,7 @@ input[type=range]::-webkit-slider-thumb {
 
 .country.terminated{
     transition: fill .4s ease;
-    fill: #b23737;
+    fill: #a74949;
 }
 
 .country.visible.hovering {
