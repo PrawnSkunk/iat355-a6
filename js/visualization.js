@@ -48,7 +48,7 @@
 
         // No country selected
         rightPanel.append("div")
-            .attr("class", "details")
+            .attr("class", "details details-left")
             .append("h3")
             .text("No country selected.");
     var second_rightPanel = d3.select("#second_charts")
@@ -56,8 +56,8 @@
             .attr("class", "container");
 
             // No country selected
-            rightPanel.append("div")
-                .attr("class", "details")
+            second_rightPanel.append("div")
+                .attr("class", "details details-right")
                 .append("h3")
                 .text("No country selected.");
 
@@ -69,7 +69,7 @@
 
     // Translate between a round globe and flat screen
     var projection = d3.geoMercator()
-        .rotate([115, 0]) // Center map around Canada
+        .rotate([60, 0]) // Center map around Canada
         .translate([ width / 2, height / 2 + offset / 2 ]) // Center it
         .scale(100); // Zoom 100%
 
