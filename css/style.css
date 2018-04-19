@@ -186,7 +186,7 @@ img {
 }
 
 div {
-    clear: left; /* clearfix hack */
+    /* clear: left; clearfix hack */
 }
 
 .block {
@@ -240,6 +240,8 @@ div {
 }
 .right-panel #charts {
     /* width: 100%; */
+    width:50%;
+    float:left;
 }
 
 .details-left {
