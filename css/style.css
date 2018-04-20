@@ -538,6 +538,24 @@ rect.bar-prohibited {
 rect.bar-terminated {
     fill: var(--closed);
 }
+
+circle.dot {
+    fill: var(--lighter);
+}
+circle.dot-before {
+    fill: var(--lighter);
+}
+circle.dot-after {
+    fill: var(--open);
+}
+circle.dot-prohibited {
+    fill: var(--dark);
+   
+}
+circle.dot-terminated {
+    fill: var(--closed);
+}
+
 .x-axis text {
     text-shadow: 1px 1px var(--lighter);
 }
