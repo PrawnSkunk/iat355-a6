@@ -207,6 +207,10 @@ div {
     display: table;
 }
 
+.details svg {
+    overflow: inherit;
+}
+
 /* Left Panel
    ========================================================================== */
 .left-panel {
