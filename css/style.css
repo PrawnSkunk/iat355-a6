@@ -540,16 +540,16 @@ rect.bar-terminated {
 }
 
 circle.dot {
-    fill: var(--lighter);
+    fill: var(--light);
 }
 circle.dot-before {
-    fill: var(--lighter);
+    fill: var(--dark);
 }
 circle.dot-after {
     fill: var(--open);
 }
 circle.dot-prohibited {
-    fill: var(--dark);
+    fill: var(--darkest);
    
 }
 circle.dot-terminated {
