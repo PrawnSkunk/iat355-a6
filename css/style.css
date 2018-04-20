@@ -185,6 +185,10 @@ img {
     margin: 0 auto;
 }
 
+.content .row:first-of-type {
+    margin-bottom: -500px; /* compensate for relative positioning of vis */
+}
+
 div {
     /* clear: left; clearfix hack */
 }
@@ -192,6 +196,8 @@ div {
 .block {
     padding-bottom: 1.5em;
     overflow: auto; /* clearfix hack */
+    overflow-x: hidden; /* fix horizontal scroll bar */
+    overflow-y: hidden; /* fix horizontal scroll bar */
 }
 
 /* clearfix hack */

@@ -123,7 +123,7 @@
             .attr("cx", function (d) {
                 return xChart(d);
             })
-            .attr("r", 1.5)
+            .attr("r", 4.5)
             .attr("cy", function (d) {
                 return yChart(d);
             })
