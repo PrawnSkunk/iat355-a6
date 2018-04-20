@@ -286,7 +286,8 @@
         var selected = null;
         var selectedId = '';
 
-
+        var selected2 = null;
+        var selectedId2 = '';
 
         // Add path for each country (shapes -> path)
         g.selectAll(".country")
@@ -533,9 +534,9 @@
                     .style("stroke-width", 1.5 / k + "px");
 
                 // Deselect previous country
-                if (selected != null) {
-                    d3.select(selected).classed("selected", false);
-                    d3.select("#" + selectedId)
+                if (selected2 != null) {
+                    d3.select(selected2).classed("selected", false);
+                    d3.select("#" + selectedId2)
                         .classed("selected", false)
                         .html(function (d) {
                             return d.properties.name;
@@ -609,8 +610,8 @@
                     });
 
                 // If you click on the same country twice, deselect
-                if (selectedId == d.id) {
-                    if (selected != null) {
+                if (selectedId2 == d.id) {
+                    if (selected2 != null) {
                         // Clear the right panel
                         second_rightPanel.selectAll("div").remove();
                         second_rightPanel.append("div")
@@ -618,8 +619,8 @@
                             .append("h3")
                             .text("No country selected.");
                         // Deselect current country
-                        d3.select(selected).classed("selected", false);
-                        d3.select("#" + selectedId)
+                        d3.select(selected2).classed("selected", false);
+                        d3.select("#" + selectedId2)
                             .classed("selected", false)
                             .html(function (d) {
                                 return d.properties.name;
@@ -628,8 +629,8 @@
                 }
 
                 // Set selected country strings
-                selected = this;
-                selectedId = d.id;
+                selected2 = this;
+                selectedId2 = d.id;
             })
             // Add .hovering class on mouse over
             .on("mouseover", function (d) {
